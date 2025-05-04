@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-04-29T17:08:35.048350733Z[GMT]")
 @RestController
+@CrossOrigin(origins = "*")
 public class FamilyApiController implements FamilyApi {
 
     private static final Logger log = LoggerFactory.getLogger(FamilyApiController.class);
@@ -69,19 +71,5 @@ public class FamilyApiController implements FamilyApi {
         return new ResponseEntity<Void>(HttpStatus.valueOf(201));
     }
 
-    public ResponseEntity<List<FamilyDTO>> familyGet() {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                var family = financeService.getFamilies();
-                return new ResponseEntity<List<FamilyDTO>>(family,HttpStatus.valueOf(200));
-            } catch (Exception e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<FamilyDTO>>(HttpStatus.valueOf(500));
-            }
-        }
-
-        return new ResponseEntity<List<FamilyDTO>>(HttpStatus.NOT_IMPLEMENTED);
-    }
 
 }

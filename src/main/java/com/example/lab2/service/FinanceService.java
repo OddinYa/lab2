@@ -13,16 +13,10 @@ public interface FinanceService {
     void addUser(UserDTO userDTO, Integer familyId);
 
 
-    void createNewFamily(UserDTO userDTO);
-
-
     UserDTO getUser(Integer userId);
 
 
     void deleteUser(Integer userId);
-
-
-    void updateUser(Integer userId);
 
 
     void addBuy(BuyDTO buyDTO, Integer familyId);
@@ -39,5 +33,6 @@ public interface FinanceService {
 
     void addBalance(MoneyDTO moneyDTO, Integer familyId);
 
-    List<FamilyDTO> getFamilies();
+    List<UserDTO> getUsers();
+
 }

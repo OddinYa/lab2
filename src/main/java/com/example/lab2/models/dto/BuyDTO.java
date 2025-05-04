@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -23,6 +24,13 @@ import javax.validation.constraints.*;
 
 
 public class BuyDTO   {
+
+  @JsonProperty("id")
+
+  private Integer id = null;
+
+  @JsonProperty("idUser")
+  private Integer idUser = null;
   @JsonProperty("cost")
 
   private Float cost = null;
@@ -36,12 +44,37 @@ public class BuyDTO   {
   private LocalDate date = null;
 
 
+  @JsonProperty("userName")
+  private String userName;
+
   public BuyDTO cost(Float cost) { 
 
     this.cost = cost;
     return this;
   }
+  /**
+   * Id товара
+   * @return id
+   **/
+    @Schema(required = true,description = "Id товара")
+    @NotNull
+    public Integer getId(){return id;}
 
+    public void setId(Integer id){
+      this.id = id;
+    }
+
+  /**
+   * Id покупателя
+   * @return idUser
+   **/
+  @Schema(required = true,description = "Id покупателя")
+  @NotNull
+  public Integer getIdUser(){return idUser;}
+
+  public void setIdUser(Integer idUser){
+    this.idUser = idUser;
+  }
   /**
    * Цена покупки
    * @return cost
@@ -54,6 +87,18 @@ public class BuyDTO   {
     return cost;
   }
 
+  /**
+   * Имя пользователя
+   * @return userName
+   **/
+  @Schema(required = true,description = "Имя пользователя")
+  @NotNull
+  public  String getUserName(){
+    return userName;
+  }
+  public void setUserName(String str){
+    this.userName = str;
+  }
 
 
   public void setCost(Float cost) { 
@@ -121,21 +166,24 @@ public class BuyDTO   {
       return false;
     }
     BuyDTO buyDTO = (BuyDTO) o;
-    return Objects.equals(this.cost, buyDTO.cost) &&
-        Objects.equals(this.name, buyDTO.name) &&
-        Objects.equals(this.date, buyDTO.date);
+    return Objects.equals(this.idUser,buyDTO.idUser) &&
+            Objects.equals(this.cost, buyDTO.cost) &&
+            Objects.equals(this.name, buyDTO.name) &&
+            Objects.equals(this.id,buyDTO.id)&&
+            Objects.equals(this.date, buyDTO.date);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(cost, name, date);
+    return Objects.hash(id,idUser,cost, name, date);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class BuyDTO {\n");
-    
+    sb.append("    id: ").append(toIndentedString(id)).append(("\n"));
+    sb.append("    idUser: ").append(toIndentedString(idUser)).append(("\n"));
     sb.append("    cost: ").append(toIndentedString(cost)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    date: ").append(toIndentedString(date)).append("\n");

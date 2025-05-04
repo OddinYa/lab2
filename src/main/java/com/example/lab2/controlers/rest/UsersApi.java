@@ -9,6 +9,7 @@ import com.example.lab2.models.dto.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-04-29T17:08:35.048350733Z[GMT]")
 @Validated
@@ -43,18 +45,6 @@ public interface UsersApi {
 );
 
 
-    @Operation(summary = "Создать пользователя", description = "Создает пользователя и новый семейный бюджет", tags={ "Users" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "Пользователь и семья успешно созданы"),
-        
-        @ApiResponse(responseCode = "401", description = "Требуется аутентификация"),
-        
-        @ApiResponse(responseCode = "403", description = "Доступ запрещен") })
-    @RequestMapping(value = "/users",
-        consumes = { "application/json" }, 
-        method = RequestMethod.POST)
-    ResponseEntity<Void> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody UserDTO body
-);
 
 
     @Operation(summary = "Удалить пользователя", description = "Удаление пользователя по id", tags={ "Users" })
@@ -89,20 +79,22 @@ public interface UsersApi {
     ResponseEntity<UserDTO> usersUserIdGet(@Parameter(in = ParameterIn.PATH, description = "ID пользователя", required=true, schema=@Schema()) @PathVariable("userId") Integer userId
 );
 
+    @Operation(summary = "Получить список пользователей", description = "Получение списка пользователей", tags={ "Users" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Успешное выполнение", content = @Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))),
 
-    @Operation(summary = "Обновить пользователя", description = "Обновление пользователя по id", tags={ "Users" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Пользователь успешно обновлен"),
-        
-        @ApiResponse(responseCode = "401", description = "Требуется аутентификация"),
-        
-        @ApiResponse(responseCode = "403", description = "Доступ запрещен"),
-        
-        @ApiResponse(responseCode = "404", description = "Пользователь не найден") })
-    @RequestMapping(value = "/users/{userId}",
-        method = RequestMethod.PATCH)
-    ResponseEntity<Void> usersUserIdPatch(@Parameter(in = ParameterIn.PATH, description = "ID пользователя", required=true, schema=@Schema()) @PathVariable("userId") Integer userId
-);
+            @ApiResponse(responseCode = "401", description = "Требуется аутентификация"),
+
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен"),
+
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден"),
+
+            @ApiResponse(responseCode = "500", description = "Ошибка обработки") })
+    @RequestMapping(value = "/users",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<UserDTO>> usersGet();
+
 
 }
 

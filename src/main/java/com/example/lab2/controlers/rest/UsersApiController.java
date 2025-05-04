@@ -12,14 +12,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-04-29T17:08:35.048350733Z[GMT]")
 @RestController
+@CrossOrigin(origins = "*")
 public class UsersApiController implements UsersApi {
 
     private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
@@ -44,15 +48,6 @@ public class UsersApiController implements UsersApi {
 
         String accept = request.getHeader("Accept");
         financeService.addUser(body,familyId);
-        return new ResponseEntity<Void>(HttpStatus.valueOf(201));
-    }
-
-    public ResponseEntity<Void> usersPost(
-            @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema())
-            @Valid @RequestBody UserDTO body
-) {
-        String accept = request.getHeader("Accept");
-        financeService.createNewFamily(body);
         return new ResponseEntity<Void>(HttpStatus.valueOf(201));
     }
 
@@ -83,13 +78,22 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<UserDTO>(HttpStatus.valueOf(404));
     }
 
-    public ResponseEntity<Void> usersUserIdPatch(
-            @Parameter(in = ParameterIn.PATH, description = "ID пользователя", required=true, schema=@Schema())
-            @PathVariable("userId") Integer userId
-) {
+
+    public ResponseEntity<List<UserDTO>> usersGet() {
         String accept = request.getHeader("Accept");
-        financeService.updateUser(userId);
-        return new ResponseEntity<Void>(HttpStatus.valueOf(200));
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                var users = financeService.getUsers();
+                return new ResponseEntity<List<UserDTO>>(users, HttpStatus.valueOf(200));
+            } catch (Exception e) {
+                log.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<List<UserDTO>>(HttpStatus.valueOf(500));
+            }
+        }
+
+        return new ResponseEntity<List<UserDTO>>(HttpStatus.valueOf(404));
     }
+
+
 
 }

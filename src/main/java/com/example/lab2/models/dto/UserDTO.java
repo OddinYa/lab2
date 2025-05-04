@@ -26,6 +26,12 @@ import javax.validation.constraints.*;
 
 
 public class UserDTO   {
+
+  @JsonProperty("id")
+  @NotNull
+  private Integer id;
+
+
   @JsonProperty("money")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
@@ -46,14 +52,21 @@ public class UserDTO   {
   @Valid
   private List<BuyDTO> buyList = null;
 
+
   public UserDTO money(MoneyDTO money) { 
 
     this.money = money;
     return this;
   }
-
   /**
-   * Get money
+   * id пользователя
+   * @return id
+   **/
+  public Integer getId(){ return id;}
+
+  public void setId(Integer id){this.id=id;}
+  /**
+   * Деньги пользователя
    * @return money
    **/
   

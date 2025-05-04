@@ -1,0 +1,297 @@
+openapi: 3.0.3
+info:
+  title: Family Finance API
+  description: API для управления семейным бюджетом
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/non-9e0/Test/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://localhost:8080/api/family_finances
+  description: Локальный сервер разработки
+tags:
+- name: Users
+  description: Управление пользователями
+- name: Buys
+  description: Управление покупками
+
+paths:
+  /users/{familyId}:
+    post:
+      tags:
+      - Users
+      summary: Добавить пользователя в семью
+      description: Добавляет нового пользователя в семью
+      parameters:
+      - name: familyId
+        in: path
+        description: ID семьи
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        "201":
+          description: Пользователь успешно добавлен
+        "401":
+          description: Требуется аутентификация
+        "403":
+          description: Доступ запрещен
+        "404":
+          description: Семья не найдена
+  /users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Получить пользователя
+      description: Получение пользователя по id
+      parameters:
+      - name: userId
+        in: path
+        description: ID пользователя
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Успешное выполнение
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        "401":
+          description: Требуется аутентификация
+        "403":
+          description: Доступ запрещен
+        "404":
+          description: Пользователь не найден
+    delete:
+      tags:
+      - Users
+      summary: Удалить пользователя
+      description: Удаление пользователя по id
+      parameters:
+      - name: userId
+        in: path
+        description: ID пользователя
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Пользователь успешно удален
+        "401":
+          description: Требуется аутентификация
+        "403":
+          description: Доступ запрещен
+        "404":
+          description: Пользователь не найден
+  /buys/{familyId}:
+    get:
+      tags:
+      - Buys
+      summary: Список покупок семьи
+      description: Возвращает список покупок по id семьи
+      parameters:
+      - name: familyId
+        in: path
+        description: ID семьи
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Успешное выполнение
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BuyDTO'
+        "401":
+          description: Требуется аутентификация
+        "403":
+          description: Доступ запрещен
+        "404":
+          description: Семья не найдена
+    post:
+      tags:
+      - Buys
+      summary: Добавить покупку
+      description: Добавляет новые покупки семье
+      parameters:
+      - name: familyId
+        in: path
+        description: ID семьи
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyDTO'
+        required: true
+      responses:
+        "201":
+          description: Покупка успешно добавлена
+        "401":
+          description: Требуется аутентификация
+        "403":
+          description: Доступ запрещен
+        "404":
+          description: Семья не найдена
+  /buys/{buyId}/{familyId}:
+    delete:
+      tags:
+      - Buys
+      summary: Удалить покупку
+      description: Удаляет покупку по id
+      parameters:
+      - name: buyId
+        in: path
+        description: ID покупки
+        required: true
+        schema:
+          type: integer
+      - name: familyId
+        in: path
+        description: ID семьи
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Покупка успешно удалена
+        "401":
+          description: Требуется аутентификация
+        "403":
+          description: Доступ запрещен
+        "404":
+          description: Покупка или семья не найдены
+  /family/balance/{familyId}:
+    get:
+      tags:
+      - Family
+      summary: Баланс семьи
+      description: Возвращает сумму баланса по id семьи
+      parameters:
+      - name: familyId
+        in: path
+        description: ID семьи
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Успешное выполнение
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+        "401":
+          description: Требуется аутентификация
+        "403":
+          description: Доступ запрещен
+        "404":
+          description: Семья не найдена
+    post:
+      tags:
+      - Family
+      summary: Пополнить баланс семьи
+      description: Пополняет баланс семьи по id
+      parameters:
+      - name: familyId
+        in: path
+        description: ID семьи
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoneyDTO'
+        required: true
+      responses:
+        "201":
+          description: Баланс успешно пополнен
+        "401":
+          description: Требуется аутентификация
+        "403":
+          description: Доступ запрещен
+        "404":
+          description: Семья не найдена
+components:
+  schemas:
+    BuyDTO:
+      required:
+      - idUser
+      - cost
+      - date
+      - name
+      - userName
+      type: object
+      properties:
+        idUser:
+          type: number
+          desctiption: Пользователь покупки
+          format: integer
+        cost:
+          type: number
+          description: Цена покупки
+          format: float
+        name:
+          type: string
+          description: Наименование покупки
+        date:
+          type: string
+          description: Дата покупки
+          format: date
+        userName:
+          type: string
+          description: Дата покупки
+          
+    MoneyDTO:
+      required:
+      - cash
+      type: object
+      properties:
+        cash:
+          type: number
+          description: Сумма денег
+          format: float
+    UserDTO:
+      required:
+      - name
+      type: object
+      properties:
+        money:
+          $ref: '#/components/schemas/MoneyDTO'
+        spending:
+          type: number
+          description: Сумма потраченных средств
+          format: float
+        name:
+          type: string
+          description: Имя пользователя
+        buyList:
+          type: array
+          description: Список покупок пользователя
+          items:
+            $ref: '#/components/schemas/BuyDTO'
+    FamilyDTO:
+      type: object
+      properties:
+        money:
+          $ref: '#/components/schemas/MoneyDTO'
+        userList:
+          type: array
+          description: Список пользователей в семье
+          items:
+            $ref: '#/components/schemas/UserDTO'

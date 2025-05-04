@@ -62,17 +62,6 @@ public interface FamilyApi {
 );
 
 
-    @Operation(summary = "Список семей", description = "Получить список семей", tags={ "Family" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Успешное выполнение", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FamilyDTO.class)))),
-        
-        @ApiResponse(responseCode = "401", description = "Требуется аутентификация"),
-        
-        @ApiResponse(responseCode = "403", description = "Доступ запрещен") })
-    @RequestMapping(value = "/family",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<List<FamilyDTO>> familyGet();
 
 }
 
